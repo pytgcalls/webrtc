@@ -1,0 +1,32 @@
+diff --git a/p2p/base/connection.cc b/p2p/base/connection.cc
+index 93a9a3f791..36693f1bd1 100644
+--- a/p2p/base/connection.cc
++++ b/p2p/base/connection.cc
+@@ -1664,6 +1664,14 @@ void Connection::MaybeUpdateLocalCandidate(StunRequest* request,
+   }
+
+   for (const Candidate& candidate : port_->Candidates()) {
++    if (absl::EndsWith(candidate.address().hostname(), ".reflector")) {
++      Candidate testCandidate = candidate;
++      testCandidate.set_address(local_candidate_.address());
++      if (testCandidate == local_candidate_) {
++        return;
++      }
++    }
++
+     if (candidate.address() == addr->GetAddress()) {
+       if (local_candidate_ != candidate) {
+         RTC_LOG(LS_INFO) << ToString()
+diff --git a/p2p/base/p2p_transport_channel.cc b/p2p/base/p2p_transport_channel.cc
+index eb3553b52a..a03e69ec2b 100644
+--- a/p2p/base/p2p_transport_channel.cc
++++ b/p2p/base/p2p_transport_channel.cc
+@@ -1245,7 +1245,7 @@ void P2PTransportChannel::AddRemoteCandidate(const Candidate& candidate) {
+     }
+   }
+
+-  if (new_remote_candidate.address().IsUnresolvedIP()) {
++  if (new_remote_candidate.address().IsUnresolvedIP() && !absl::EndsWith(new_remote_candidate.address().hostname(), ".reflector")) {
+     // Don't do DNS lookups if the IceTransportPolicy is "none" or "relay".
+     bool sharing_host = ((allocator_->candidate_filter() & CF_HOST) != 0);
+     bool sharing_stun = ((allocator_->candidate_filter() & CF_REFLEXIVE) != 0);

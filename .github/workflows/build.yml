@@ -1,15 +1,6 @@
 name: build
 on:
-  push:
-    paths-ignore:
-      - "**.md"
-      - "LICENSE"
-      - "NOTICE"
-      - ".gitignore"
-    branches-ignore:
-      - daily
-    tags:
-      - "*"
+  workflow_dispatch:
 jobs:
   build-windows:
     strategy:
@@ -64,7 +55,7 @@ jobs:
       matrix:
         name:
           - macos_arm64
-          - ios
+          #- ios
     runs-on: macos-13
     steps:
       - uses: actions/checkout@v4
@@ -93,15 +84,15 @@ jobs:
       fail-fast: false
       matrix:
         name:
-          - raspberry-pi-os_armv6
-          - raspberry-pi-os_armv7
-          - raspberry-pi-os_armv8
-          - ubuntu-18.04_armv8
+          #- raspberry-pi-os_armv6
+          #- raspberry-pi-os_armv7
+          #- raspberry-pi-os_armv8
+          #- ubuntu-18.04_armv8
           - ubuntu-20.04_armv8
-          - ubuntu-22.04_armv8
+          #- ubuntu-22.04_armv8
           - ubuntu-20.04_x86_64
-          - ubuntu-22.04_x86_64
-          - android
+          #- ubuntu-22.04_x86_64
+          #- android
     runs-on: ${{ startsWith(matrix.name, 'ubuntu-22.04') && 'ubuntu-22.04' || 'ubuntu-20.04' }}
     steps:
       - uses: actions/checkout@v4
@@ -160,33 +151,33 @@ jobs:
       - uses: ./.github/actions/download
         with:
           platform: macos_arm64
-      - uses: ./.github/actions/download
-        with:
-          platform: ios
-      - uses: ./.github/actions/download
-        with:
-          platform: raspberry-pi-os_armv6
-      - uses: ./.github/actions/download
-        with:
-          platform: raspberry-pi-os_armv7
-      - uses: ./.github/actions/download
-        with:
-          platform: raspberry-pi-os_armv8
-      - uses: ./.github/actions/download
-        with:
-          platform: ubuntu-18.04_armv8
+      #- uses: ./.github/actions/download
+      #  with:
+      #    platform: ios
+      #- uses: ./.github/actions/download
+      #  with:
+      #    platform: raspberry-pi-os_armv6
+      #- uses: ./.github/actions/download
+      #  with:
+      #    platform: raspberry-pi-os_armv7
+      #- uses: ./.github/actions/download
+      #  with:
+      #    platform: raspberry-pi-os_armv8
+      #- uses: ./.github/actions/download
+      #  with:
+      #    platform: ubuntu-18.04_armv8
       - uses: ./.github/actions/download
         with:
           platform: ubuntu-20.04_armv8
-      - uses: ./.github/actions/download
-        with:
-          platform: ubuntu-22.04_armv8
+      #- uses: ./.github/actions/download
+      #  with:
+      #    platform: ubuntu-22.04_armv8
       - uses: ./.github/actions/download
         with:
           platform: ubuntu-20.04_x86_64
-      - uses: ./.github/actions/download
-        with:
-          platform: ubuntu-22.04_x86_64
+      #- uses: ./.github/actions/download
+      #  with:
+      #    platform: ubuntu-22.04_x86_64
       - uses: ./.github/actions/download
         with:
           platform: android

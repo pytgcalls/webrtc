@@ -1,8 +1,6 @@
 name: daily build
 on:
-  schedule:
-    # 毎日 09:00 JST
-    - cron: "0 0 * * *"
+  workflow_dispatch:
 jobs:
   build-windows:
     strategy:
@@ -14,8 +12,6 @@ jobs:
     runs-on: windows-2019
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: daily
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
@@ -60,7 +56,7 @@ jobs:
       matrix:
         name:
           - macos_arm64
-          - ios
+          #- ios
     runs-on: macos-13
     steps:
       - uses: actions/checkout@v4
@@ -92,15 +88,15 @@ jobs:
       fail-fast: false
       matrix:
         name:
-          - raspberry-pi-os_armv6
-          - raspberry-pi-os_armv7
-          - raspberry-pi-os_armv8
-          - ubuntu-18.04_armv8
+          #- raspberry-pi-os_armv6
+          #- raspberry-pi-os_armv7
+          #- raspberry-pi-os_armv8
+          #- ubuntu-18.04_armv8
           - ubuntu-20.04_armv8
-          - ubuntu-22.04_armv8
+          #- ubuntu-22.04_armv8
           - ubuntu-20.04_x86_64
-          - ubuntu-22.04_x86_64
-          - android
+          #- ubuntu-22.04_x86_64
+          #- android
     runs-on: ${{ startsWith(matrix.name, 'ubuntu-22.04') && 'ubuntu-22.04' || 'ubuntu-20.04' }}
     steps:
       - uses: actions/checkout@v4
