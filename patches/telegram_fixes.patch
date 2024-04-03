@@ -4,7 +4,7 @@ index 93a9a3f791..36693f1bd1 100644
 +++ b/p2p/base/connection.cc
 @@ -1664,6 +1664,14 @@ void Connection::MaybeUpdateLocalCandidate(StunRequest* request,
    }
-
+ 
    for (const Candidate& candidate : port_->Candidates()) {
 +    if (absl::EndsWith(candidate.address().hostname(), ".reflector")) {
 +      Candidate testCandidate = candidate;
@@ -13,7 +13,7 @@ index 93a9a3f791..36693f1bd1 100644
 +        return;
 +      }
 +    }
-+
++      
      if (candidate.address() == addr->GetAddress()) {
        if (local_candidate_ != candidate) {
          RTC_LOG(LS_INFO) << ToString()
@@ -24,7 +24,7 @@ index eb3553b52a..a03e69ec2b 100644
 @@ -1245,7 +1245,7 @@ void P2PTransportChannel::AddRemoteCandidate(const Candidate& candidate) {
      }
    }
-
+ 
 -  if (new_remote_candidate.address().IsUnresolvedIP()) {
 +  if (new_remote_candidate.address().IsUnresolvedIP() && !absl::EndsWith(new_remote_candidate.address().hostname(), ".reflector")) {
      // Don't do DNS lookups if the IceTransportPolicy is "none" or "relay".
